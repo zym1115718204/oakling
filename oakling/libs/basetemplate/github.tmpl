@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Created on $CREATE_TIME
+# Project: $PROJECTS_NAME
+# Type: Download Type
+
+import random
+import time
+import arrow
+import datetime
+import subprocess
+from libs.signal.channel import Channel
+from libs.storage import Storage
+
+PROJECT_NAME = "$PROJECTS_NAME"
+
+"""
+Channel API:
+channel = Channel(channel)
+channel.log('log')
+
+Storage API:
+storage = Storage(channel)
+storage.save_to_single_file(content, filename)
+storage.save_to_time_file(content, filename)
+"""
+
+
+class Spider(object):
+    """
+    Spider Demo
+    """
+
+    def __init__(self, channel=None):
+        """
+        Spider init
+        :param channel:
+        """
+        self.channel = Channel(channel)
+        self.storage = Storage(PROJECT_NAME)
+
+    def download(self, url='https://api.github.com/events'):
+        """
+        download file from url
+        :return:
+        """
+        import requests
+
+        r = requests.get(url)
+
+        self.channel.log(r.text)
+        self.channel.prograss(100)
+
+        return {
+            "status": True
+        }
+
+    def run(self, **kw):
+        """
+        Run Spider
+        :return:
+        """
+        url = kw.get("url")
+
+        result = self.download(url)
+        status = self.storage.save_to_single_file(str(result), 'github.log')
+
+        return {
+            "status": True
+        }

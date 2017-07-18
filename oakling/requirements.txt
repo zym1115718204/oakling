@@ -1,0 +1,20 @@
+# Author: oakling group
+# Contents: requirements packages
+# Created on 2017.5.27
+
+django
+click
+faker
+arrow
+unittest2
+psutil
+mongoengine
+redis
+celery
+schedule
+flower
+tornado
+requests
+ipython==5.4.1
+snakebite
+smart_open

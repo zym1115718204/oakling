@@ -1,0 +1,89 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Created on $CREATE_TIME
+# Project: $PROJECTS_NAME
+# Type: Nginx log
+
+import random
+import time
+import arrow
+import datetime
+from faker import Factory
+from libs.signal.channel import Channel
+from libs.storage import Storage
+
+PROJECT_NAME = "$PROJECTS_NAME"
+
+"""
+Channel API:
+channel = Channel(channel)
+channel.log('log')
+
+Storage API:
+storage = Storage(channel)
+storage.save_to_single_file(content, filename)
+storage.save_to_time_file(content, filename)
+"""
+
+
+
+class Spider(object):
+    """
+    Spider Demo
+    """
+
+    def __init__(self, channel=None):
+        """
+        Spider init
+        :param channel:
+        """
+        self.channel = Channel(channel)
+        self.storage = Storage(PROJECT_NAME)
+
+    @staticmethod
+    def generator_nginx_log():
+        """
+        Generate Nginx Log
+        :return:
+        """
+        fake = Factory.create('it_IT')
+        ip = fake.ipv4()
+
+        now_time = arrow.now().replace(hours=8).datetime
+        user_agent = fake.user_agent()
+        city = fake.city_suffix()
+        code = random.choice((200, 500, 400))
+
+        return '{0} - - [{1}] "GET HTTP/1.1" {2} "{3}" {4}'.format(
+            ip, now_time, code, user_agent, city
+        )
+
+    def generator_nginx_log_by_num(self, num=1):
+        """
+        Generate Nginx Log by Number Parameter
+        :param num: Integer
+        :return:
+        """
+        nginx_log = self.generator_nginx_log()
+        for i in range(1, num):
+            log = self.generator_nginx_log()
+            self.channel.prograss((i+1)*100/num)
+            self.channel.log(log)
+
+            nginx_log = "\n".join((nginx_log, log))
+        return nginx_log
+
+    def run(self, **kw):
+        """
+        Run Spider
+        :return:
+        """
+        num = kw.get("num")
+        output_file = kw.get("output_file")
+
+        result = self.generator_nginx_log_by_num(num)
+        status = self.storage.save_to_time_file(result, output_file)
+
+        return status
+
+

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Tornado Websocket</title>
+</head>
+
+<script src="http://apps.bdimg.com/libs/jquery/1.6.4/jquery.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+
+    var ws;
+    var content=$("#list");
+
+    function onLoad() {
+        ws = new WebSocket("ws://localhost:8080/ws");
+        ws.onmessage = function (e) {
+            console.log(e);
+            console.log(e.data);
+            var p_msg = $("<p>"+e.data+"</p>") ;
+            p_msg.appendTo(content);
+        }
+    }
+
+
+    function sendMsg() {
+        var run_command = {};
+        run_command["command"] = true;
+        run_command["name"] = "test";
+        run_command["signal"] = "info";
+        run_command["admin"] = true;
+        run_command["data"] = document.getElementById('msg').value;
+        ws.send(JSON.stringify(run_command));
+        //ws.send(document.getElementById('msg').value);
+    }
+
+    $("#send").click(function() {
+        sendMsg();
+        });
+
+    onLoad();
+
+    // onload='onLoad();'
+});
+</script>
+
+<body>
+    Message to send:   <input type="text" id="msg" />
+      <input type="button" id="send" value="发送" />
+
+        <p id="test">Content:</p>
+        <div id="list">
+{#            {% for message in messages %}#}
+{#            <p> {{ message }}</p>#}
+{#            {% end %}#}
+        </div>
+
+</body>
+
+</html>

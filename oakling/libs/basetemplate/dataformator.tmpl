@@ -1,0 +1,207 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Created on $CREATE_TIME
+# Project: $PROJECTS_NAME
+# Type: data formator
+
+import json
+import random
+import time
+import arrow
+import datetime
+from libs.signal.channel import Channel
+from libs.storage import Storage
+
+PROJECT_NAME = "$PROJECTS_NAME"
+
+"""
+Channel API:
+channel = Channel(channel)
+channel.log('log')
+
+Storage API:
+storage = Storage(channel)
+storage.save_to_single_file(content, filename)
+storage.save_to_time_file(content, filename)
+"""
+
+
+class Spider(object):
+    """
+    Spider Demo
+    """
+
+    def __init__(self, channel=None):
+        """
+        Spider init
+        :param channel:
+        """
+        self.channel = Channel(channel)
+        self.storage = Storage(PROJECT_NAME)
+
+
+    @staticmethod
+    def generate_interval_data(point, keys):
+        """
+        Generate time interval data
+        """
+        time = point[0]
+        start = time[0]
+        _time_num = point[1]
+
+        data_formator = "{0},"
+        for i, key in enumerate(keys):
+            index = i+1
+            data_formator += "{%s}," %(index, )
+
+        data_formator = data_formator[:-1] + "\n"
+        exec_formator = "_data = data_formator.format(arrow.get(start+i*_interval)\
+                         .format('YYYY-MM-DD HH:mm:ss'),%s)" %("random.randint(0,1),"* len(keys))
+        data = ""
+        if _time_num==0:
+            return data
+        else:
+            _time_range = time[1]-time[0]
+            _interval =  float(_time_range)/_time_num
+            for i in xrange(int(_time_num)):
+                exec(exec_formator)
+                data += _data
+
+        return data
+
+    def generate_data(self, time_point, dimension):
+        """
+        Generate data
+        """
+        keys = []
+        data = "time,temp,wet,humi\n"
+
+        for key in dimension.keys():
+            if key != "time": keys.append(key)
+
+        for i, point in enumerate(time_point):
+            self.channel.prograss((i+1)*100/len(time_point))
+            _part_data = self.generate_interval_data(point, keys)
+            data += _part_data
+
+        return data
+
+
+    def generate_time_dimension(self, case_name, num, start_time, end_time, dimension):
+        """
+        Generate time dismension
+        """
+        case_num = num
+        end = arrow.get(end_time).float_timestamp
+        start = arrow.get(start_time).float_timestamp
+        time_range = end - start
+
+        _time_num = dimension["time"]["dimension_curves"]["curves_dot_num"]
+        _time_tuple = dimension["time"]["dimension_curves"]["curves_data"]
+        _time_tuple = [float(i[1]) for i in eval(_time_tuple)]
+        _xargs = float(case_num) / sum(_time_tuple)
+        _inteval = float(time_range)/_time_num
+
+        time_range = [(i*_inteval + start, (i+1)*_inteval + start) for i in xrange(_time_num) ]
+        datetime_range = [(arrow.get(i[0]).format('YYYY-MM-DD HH:mm:ss'), arrow.get(i[1]).\
+                                           format('YYYY-MM-DD HH:mm:ss')) for i in time_range ]
+        time_num = [round(i * _xargs) for i in _time_tuple]
+
+        time_point = []
+        datetime_point = []
+
+        for i in xrange(_time_num):
+            time_point.append((time_range[i], time_num[i]))
+            datetime_point.append((datetime_range[i], time_num[i]))
+
+        self.channel.log(str(time_point))
+        self.channel.log(str(datetime_point))
+
+        return time_point
+
+    def run(self, **kw):
+        """
+        Run Spider
+        :return:
+        """
+
+        kw = {
+            "data_num": 100,
+            "case_dimension": [
+                {
+                    "dimension_name": "\\u65f6\\u95f4",
+                    "dimension_curves": {
+                        "curves_name": "linear",
+                        "curves_dot_num": 10,
+                        "curves_data": "[[0,40],[20,67],[40,62],[60,31],[80,10],[100,25],[120,57],[140,69],[160,47],[180,16]]",
+                        "curves_yrange": "0,200",
+                        "curves_xrange": "0,100"
+                    },
+                    "dimension_field": "time"
+                },
+                {
+                    "dimension_name": "\\u6e29\\u5ea6",
+                    "dimension_curves": {
+                        "curves_name": "linear",
+                        "curves_dot_num": 10,
+                        "curves_data": "[[0,40],[20,67],[40,62],[60,31],[80,10],[100,25],[120,57],[140,69],[160,47],[180,16]]",
+                        "curves_yrange": "0,200",
+                        "curves_xrange": "0,100"
+                    },
+                    "dimension_field": "temp"
+                },
+                {
+                    "dimension_name": "\\u6e7f\\u5ea6",
+                    "dimension_curves": {
+                        "curves_dot_num": 10,
+                        "curves_data": "[[0,40],[20,67],[40,62],[60,31],[80,10],[100,25],[120,57],[140,69],[160,47],[180,16]]",
+                        "curves_start_date": "",
+                        "curves_end_date": "",
+                        "curves_xrange": "0,100",
+                        "curves_name": "linear",
+                        "curves_yrange": "0,200"
+                    },
+                    "dimension_field": "wet"
+                },
+                {
+                    "dimension_name": "\\u6e7f\\u5ea6",
+                    "dimension_curves": {
+                        "curves_dot_num": 10,
+                        "curves_data": "[[0,40],[20,67],[40,62],[60,31],[80,10],[100,25],[120,57],[140,69],[160,47],[180,16]]",
+                        "curves_start_date": "",
+                        "curves_end_date": "",
+                        "curves_xrange": "0,100",
+                        "curves_name": "linear",
+                        "curves_yrange": "0,200"
+                    },
+                    "dimension_field": "humi"
+                }
+            ],
+            "start_date": "2017-06-22 00:00:00",
+            "end_date": "2017-06-23 00:00:00",
+            "case_name": "\\u5929\\u6c14\\u6848\\u4f8b"
+        }
+
+        case_name = kw.get("case_name")
+        num = kw.get("data_num")
+        start_time = kw.get("start_date")
+        end_time = kw.get("end_date")
+        _case_dimension = kw.get("case_dimension")
+
+        dimension = {}
+        for _dimension in _case_dimension:
+            dimension[_dimension["dimension_field"]] = _dimension
+
+        time_point = self.generate_time_dimension(case_name, num, start_time, end_time, dimension)
+        data = self.generate_data(time_point, dimension)
+
+        self.channel.log(data)
+        status = self.storage.save_to_time_file(data, 'data.csv')
+
+        # print data
+
+        return {
+            "status": True
+        }
+
+

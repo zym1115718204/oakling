@@ -1,0 +1,94 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Created on $CREATE_TIME
+# Project: $PROJECTS_NAME
+# Type: Shell Command
+
+import time
+import arrow
+import datetime
+import subprocess
+from libs.signal.channel import Channel
+from libs.storage import Storage
+
+PROJECT_NAME = "$PROJECTS_NAME"
+
+"""
+Channel API:
+channel = Channel(channel)
+channel.log('log')
+
+Storage API:
+storage = Storage(channel)
+storage.save_to_single_file(content, filename)
+storage.save_to_time_file(content, filename)
+"""
+
+
+
+class Spider(object):
+    """
+    Spider Demo
+    """
+
+    def __init__(self, channel=None):
+        """
+        Spider init
+        :param channel:
+        """
+        self.channel = Channel(channel)
+        self.storage = Storage(PROJECT_NAME)
+
+    def execute_shell(self, command):
+        """
+        Execute shell command
+        :return:
+        """
+        self.channel.prograss(10)
+
+        import subprocess
+        import sys
+
+        class FlushFile(object):
+            """
+            Write-only flushing wrapper for file-type objects.
+            """
+            def __init__(self, f):
+                self.f = f
+
+            def write(self, x):
+                self.f.write(x)
+                self.f.flush()
+
+        sys.stdout = FlushFile(sys.__stdout__)
+
+        popen = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        self.channel.prograss(20)
+
+        while True:
+            next_line = popen.stdout.readline()
+            next_error = popen.stderr.readline()
+            if next_line == '' and next_error == '' and popen.poll() != None:
+                break
+            if next_line:
+                self.channel.log(next_line)
+            elif next_error:
+                self.channel.log(next_error)
+
+        self.channel.prograss(100)
+
+        return {
+            "status": True,
+            "output": "None"
+        }
+
+    def run(self, **kw):
+        """
+        Run Spider
+        :return:
+        """
+        num = kw.get("command")
+        result = self.execute_shell(num)
+
+        return result
