@@ -6,7 +6,7 @@ import os
 import json
 import datetime
 
-from collector.handler import Handler
+from collector.handler import CollectHandler
 from libs.decorator import render_json
 
 from django.views.decorators.csrf import csrf_exempt
@@ -39,7 +39,7 @@ def edit_project(request):
 
     if command and name and (
         args or group or timeout or status or priority or info or script or interval or number or ip_limit):
-        handler = Handler()
+        handler = CollectHandler()
         result = handler.edit_project_settings(data)
     else:
         result = {
@@ -72,7 +72,7 @@ def create_project(request):
 
 
     if name and command and _type:
-        handler = Handler()
+        handler = CollectHandler()
         if args:
             result = handler.create_project(name, _type, args)
         else:
@@ -99,7 +99,7 @@ def run_project(request):
     command = request.POST.get("command")
 
     if name and command:
-        handler = Handler()
+        handler = CollectHandler()
         result = handler.run_once_processor(name)
     else:
         result = {
@@ -124,7 +124,7 @@ def result_project(request):
     rows = int(request.GET.get("rows", '10'))
 
     if name and page > 0 and rows > 0:
-        handler = Handler()
+        handler = CollectHandler()
         _result = handler.query_result_by_name(name, page, rows)
         result = {
             "status": True,
@@ -155,7 +155,7 @@ def task_project(request):
     rows = int(request.GET.get("rows", '10'))
 
     if name and page > 0 and rows > 0:
-        handler = Handler()
+        handler = CollectHandler()
         _result = handler.query_task_by_name(name, page, rows)
         if _result:
             result = {
@@ -193,7 +193,7 @@ def status_project(request):
     :return:
     """
     name = request.GET.get("project", '--all')
-    handler = Handler()
+    handler = CollectHandler()
     projects = handler.query_projects_status_by_redis(name=name)
 
     for project in projects:

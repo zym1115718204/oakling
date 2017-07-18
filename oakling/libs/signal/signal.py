@@ -30,7 +30,7 @@ logger.addHandler(hdr)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "oakling.settings")
 
 from django.conf import settings
-from collector.handler import Handler
+from collector.handler import CollectHandler
 
 
 class IndexPageHandler(tornado.web.RequestHandler):
@@ -112,7 +112,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
         if name and command and signal == "run":
             _send(_package(name, signal, "Start running"))
-            handler = Handler()
+            handler = CollectHandler()
             # i = 0
             # while i <= 100:
             #     data = {

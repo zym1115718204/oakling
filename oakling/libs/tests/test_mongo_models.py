@@ -16,7 +16,7 @@ from libs.tests.basetest import unittest_log
 from collector.utils import DemoSpider
 from collector.utils import DemoShell
 from collector.utils import Processor
-from collector.handler import Handler
+from collector.handler import CollectHandler
 from collector.utils import OnceProcessor
 
 
@@ -35,7 +35,7 @@ class TestCreateMongodbModels(unittest.TestCase):
         :return:
         """
         self.test_project_name = "unittest_project"
-        self.handler = Handler()
+        self.handler = CollectHandler()
 
     @unittest_log
     def test_create_project(self):

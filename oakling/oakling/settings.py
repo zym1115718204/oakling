@@ -42,6 +42,11 @@ for name, db in MongoDBS.iteritems():
 # --------------------------------------------------------------------
 # APP Tree Settings
 # --------------------------------------------------------------------
+REGISTER_DATASYSTEMS = [
+    "LOCAL",
+    "HDFS",
+]
+
 # default, Tree root url;
 BASETREE_URL = "/dashboard/data/"
 
@@ -49,7 +54,7 @@ BASETREE_URL = "/dashboard/data/"
 LOCAL_DATAFILE_DIRS = os.path.join(os.path.dirname(BASE_DIR), "data")
 
 # default hdfs data settings
-HDFS_NAMENODE_HOST = "namenode" or ""
+HDFS_NAMENODE_HOST = "namenode"
 HDFS_NAMENODE_PORT = 8020
 HDFS_DATAFILE_DIRS = os.path.join("/tmp", "data")
 

@@ -16,7 +16,7 @@ from libs.tests.basetest import unittest_log
 from collector.utils import DemoSpider
 from collector.utils import DemoShell
 from collector.utils import Processor
-from collector.handler import Handler
+from collector.handler import CollectHandler
 from collector.utils import OnceProcessor
 
 
@@ -33,7 +33,7 @@ class TestRunUnitsProcessor(unittest.TestCase):
         Setup Initialization
         :return:
         """
-        self.handler = Handler()
+        self.handler = CollectHandler()
         self.test_project_name = "test_run_once_demo_by_handler"
         self.test_project_name_by_utils = "test_run_processor_by_utils"
         # self.test_invalid_path = "/tmp/unittest/test/nginx-test_run_once_demo_by_utils.log"

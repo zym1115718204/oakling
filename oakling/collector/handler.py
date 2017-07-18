@@ -18,7 +18,7 @@ from django.utils.encoding import smart_unicode
 from libs.database.mongodb.projectdb import Project
 
 
-class Handler(object):
+class CollectHandler(object):
     """
     Oakling Handler Route Module
     """

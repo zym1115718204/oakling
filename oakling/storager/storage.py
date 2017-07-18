@@ -14,7 +14,6 @@ class Storage(object):
     Storage data by type
     """
 
-
     def __init__(self, project_name):
         """
         Initialization

@@ -11,7 +11,7 @@ import schedule
 import threading
 
 from collector import tasks
-from collector.handler import Handler
+from collector.handler import CollectHandler
 from libs.database.mongodb.projectdb import Project
 
 from django.conf import settings
@@ -183,7 +183,7 @@ class Scheduler(object):
         :return:
         """
         results = []
-        handler = Handler()
+        handler = CollectHandler()
         projects = self._filter_drop_project()
 
         for project in projects:
@@ -203,7 +203,7 @@ class Scheduler(object):
         Run Query Project Status to Redis
         :return:
         """
-        handler = Handler()
+        handler = CollectHandler()
         results = handler.query_all_projects_status("--all")
         now = str(datetime.datetime.now())[:-4]
         info = "[ Scheduler {0}]::Analysis  Dispatch::{1} Updated Success.".format(now, len(results))

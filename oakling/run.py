@@ -15,7 +15,7 @@ import datetime
 import traceback
 
 from libs import pprint
-from collector.handler import Handler
+from collector.handler import CollectHandler
 from scheduler.scheduler import Scheduler
 from libs.signal.signal import *
 
@@ -78,7 +78,7 @@ def start_project(name, project_type):
     # click.secho('Hello %s!' % name, fg='red', underline=False)
     # click.secho('Hello %s!' % name, fg='yellow', bg='black')
 
-    handler = Handler()
+    handler = CollectHandler()
     result = handler.create_project(name, project_type)
     click.secho('%s!' % result, fg='yellow', bg='black')
 
@@ -92,7 +92,7 @@ def drop_project(name):
     :param name: project name
     :return: status
     """
-    handler = Handler()
+    handler = CollectHandler()
     result = handler.drop_project(name)
     click.secho('%s' % result, fg='yellow', bg='black')
 
@@ -105,7 +105,7 @@ def run_once(name):
     :param name: project name
     :return: status
     """
-    handler = Handler()
+    handler = CollectHandler()
     result = handler.run_once_processor(name)
     click.secho('%s' % result, fg='yellow', bg='black')
 
