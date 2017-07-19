@@ -13,8 +13,8 @@ from django.conf import settings
 
 from collector.handler import CollectHandler
 from libs.decorator import render_json
-from libs.tree.tree import TreeHandler
-from libs.tree.tree import ContentsHandler
+from storager.tree.tree import TreeHandler
+from storager.tree.tree import ContentsHandler
 
 from django.views.decorators.csrf import csrf_exempt
 

@@ -262,168 +262,221 @@
 			});
 			</script>
 
-            <div class="col-sm-4">
+            <div class="row">
 
-                <div class="panel panel-default ">
-					<h3 class="text-gray">
-					{{project.name}}
-						<small class="text-muted">HDFS FileSystem</small>
-					</h3>
+                <div class="panel panel-default col-sm-4">
 
-                    <!--Xenon Progress Counter Widget-->
-                    <div class="row">
+                    <h3 class="text-gray">
+                        {{project.name}}
+                        <small class="text-muted">HDFS FileSystem</small>
+                    </h3>
 
-                        <a href="/dashboard/data/hdfs/{{project.name}}">
-                            <div class="col-sm-12">
+                <!--Xenon Progress Counter Widget-->
+                <div class="row">
 
-                                <div class="xe-widget xe-progress-counter" data-count=".num" data-from="0" data-to="12425" data-duration="2">
+                    <div class="col-sm-12">
 
-                                    <div class="xe-icon">
-                                        <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ project.name }}</h3>
+                        <div class="xe-widget xe-progress-counter" data-count=".num" data-from="0" data-to="{{ project.fileCount }}" data-duration="2">
 
-                                    </div>
-
-
-                                    <div class="xe-background">
-                                        <i class="linecons-file">{{ project.name }}</i>
-                                    </div>
-
-                                    <div class="xe-upper">
-                                        <div class="xe-icon">
-                                            <i class="fa-file-text-o"></i>
-                                        </div>
-                                        <div class="xe-label">
-                                            <span>文件数量</span>
-                                            <strong class="num">0</strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="xe-progress">
-                                        <span class="xe-progress-fill" data-fill-from="0" data-fill-to="56" data-fill-unit="%" data-fill-property="width" data-fill-duration="2" data-fill-easing="true"></span>
-                                    </div>
-
-                                    <div class="xe-lower">
-                                        <span>更新时间</span>
-                                        <strong>{{ project.update_time }}</strong>
-                                    </div>
-
-                                </div>
-
+                            <div class="xe-icon">
+                                <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ project.name }}</h3>
                             </div>
-                        </a>
+
+                            <div class="xe-background">
+                                <i class="linecons-file">{{ project.name }}</i>
+                            </div>
+
+                            <div class="xe-upper">
+                                <div class="xe-icon">
+                                    <i class="fa-file-text-o"></i>
+                                </div>
+                                <div class="xe-label">
+                                    <span>文件数量</span>
+                                    <strong class="num">0</strong>
+                                </div>
+                                <div class="xe-icon">
+                                    <i class="fa-pie-chart"></i>
+                                </div>
+                                <div class="xe-label xe-widget counter" data-count=".length" data-from="0" data-to="{{ project.length|floatformat:3 }}" data-duration="2" data-suffix=" GB">
+                                    <span>文件大小</span>
+                                    <strong class="num length">0 </strong>
+                                </div>
+                            </div>
+
+                            <div class="xe-progress">
+                                <span class="xe-progress-fill" data-fill-from="0" data-fill-to="56" data-fill-unit="%" data-fill-property="width" data-fill-duration="2" data-fill-easing="true"></span>
+                            </div>
+
+                            <div class="xe-lower">
+                                <span>Update time</span>
+                                <span>更新时间</span>
+                                <strong>{{ project.modification_time }}</strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
 
 
                     <div class="col-sm-12">
 
-                                <h5 class="text-gray">
-                                    <i class="fa-bar-chart">&nbsp;&nbsp;数据集详情</i>
-                                </h5>
-                               <h5 class="text-gray">
-                                    <i class="fa-folder-open-o">&nbsp;&nbsp;{{ hdfs_data_dir }}</i>
-                                </h5>
+                        <h5 class="text-gray">
+                            <i class="fa-bar-chart">&nbsp;&nbsp;数据集详情</i>
+                        </h5>
 
+                        <h5 class="text-gray">
+                            <i class="fa-folder-open-o">&nbsp;&nbsp;{{ data_path }}</i>
+                        </h5>
 
-
-
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th width="40%">类型</th>
-                                            <th width="30%">平均</th>
-                                            <th width="30%">每周增长</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>文件数量</td>
-                                            <td>124,25</td>
-                                            <td>
-{#                                                <div class="sparkline line2010 dx-visibility-change-handler"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-sparkline" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden;"><g class="dxc-labels" visibility="hidden"></g><g class="dxsl-series"><g class="dxc-series"><g class="dxc-elements" stroke="#f7aa47" stroke-width="2"><path stroke-width="2" d="M 5 19 L 32 24 L 60 17 L 87 13 L 115 9 L 142 23 L 170 23 L 197 19 L 225 20 L 252 14 L 280 12 L 307 6"></path></g><g fill="#ffffff" stroke="#ffffff" stroke-width="2" r="3" visibility="hidden" class="dxc-markers" opacity="1"><circle cx="0" cy="0" r="3" fill="#ffffff" stroke="#666666" stroke-width="2" visibility="visible" transform="translate(5,19)"></circle><circle cx="0" cy="0" r="3" fill="#ffffff" stroke="#4fcdfc" stroke-width="2" visibility="visible" transform="translate(32,24)"></circle><circle cx="0" cy="0" r="3" fill="#ffffff" stroke="#d5080f" stroke-width="2" visibility="visible" transform="translate(307,6)"></circle></g></g></g></svg><div style="position: relative"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-tooltip" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden; left: 0px; top: -30px; position: absolute;"><g class="dxsl-tooltip-group" style="z-index: 1;"></g><g class="dxsl-tooltip-tracker-group"><rect x="0" y="0" width="312" height="30" rx="0" ry="0" fill="grey" opacity="0"></rect></g></svg></div></div>#}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>增长率</td>
-                                            <td>37,5%</td>
-                                            <td>
-{#                                                <div class="sparkline spline2010 dx-visibility-change-handler"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-sparkline" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden;"><g class="dxc-labels" visibility="hidden"></g><g class="dxsl-series"><g class="dxc-series"><g class="dxc-elements" stroke="#68b828" stroke-width="3"><path stroke-width="3" d="M 5 23 C 5 23 18.5 24 32 24 C 46 24 50.666666666666664 23.50909090909091 60 23 C 69 22.50909090909091 78 21.818181818181817 87 21 C 96.33333333333333 20.151515151515152 105.66666666666667 18.848484848484848 115 18 C 124 17.181818181818183 128.5 16 142 16 C 156 16 156 18 170 18 C 183.5 18 188 17.818181818181817 197 17 C 206.33333333333334 16.151515151515152 215.66666666666666 14.357575757575757 225 13 C 234 11.69090909090909 243 9.981818181818182 252 9 C 261.3333333333333 7.9818181818181815 270.6666666666667 7.509090909090909 280 7 C 289 6.509090909090909 307 6 307 6"></path></g><g fill="#ffffff" stroke="#ffffff" stroke-width="2" r="3" visibility="hidden" class="dxc-markers" opacity="1"><circle cx="0" cy="0" r="3" fill="#ffffff" stroke="#00b19d" stroke-width="2" visibility="visible" transform="translate(32,24)"></circle><circle cx="0" cy="0" r="3" fill="#ffffff" stroke="#7c38bc" stroke-width="2" visibility="visible" transform="translate(307,6)"></circle></g></g></g></svg><div style="position: relative"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-tooltip" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden; left: 0px; top: -30px; position: absolute;"><g class="dxsl-tooltip-group" style="z-index: 1;"></g><g class="dxsl-tooltip-tracker-group"><rect x="0" y="0" width="312" height="30" rx="0" ry="0" fill="grey" opacity="0"></rect></g></svg></div></div>#}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>数据引用</td>
-                                            <td>107,221</td>
-                                            <td>
-{#                                                <div class="sparkline stepline2010 dx-visibility-change-handler"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-sparkline" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden;"><g class="dxc-labels" visibility="hidden"></g><g class="dxsl-series"><g class="dxc-series"><g class="dxc-elements" stroke="#7c38bc" stroke-width="2"><path stroke-width="2" d="M 5 24 L 32 24 L 32 17 L 60 17 L 60 14 L 87 14 L 87 12 L 115 12 L 115 6 L 142 6 L 142 12 L 170 12 L 170 14 L 197 14 L 197 10 L 225 10 L 225 9 L 252 9 L 252 16 L 280 16 L 280 14 L 307 14 L 307 15"></path></g><g fill="#333" stroke="#333" stroke-width="2" r="4" visibility="hidden" class="dxc-markers" opacity="1"><path fill="#333" stroke="#ccc" stroke-width="2" r="4" visibility="visible" d="M -4 -4 L 4 -4 L 4 4 L -4 4 L -4 -4 Z" transform="translate(5,24)"></path><path fill="#333" stroke="#ccc" stroke-width="2" r="4" visibility="visible" d="M -4 -4 L 4 -4 L 4 4 L -4 4 L -4 -4 Z" transform="translate(307,15)"></path></g></g></g></svg><div style="position: relative"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-tooltip" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden; left: 0px; top: -30px; position: absolute;"><g class="dxsl-tooltip-group" style="z-index: 1;"></g><g class="dxsl-tooltip-tracker-group"><rect x="0" y="0" width="312" height="30" rx="0" ry="0" fill="grey" opacity="0"></rect></g></svg></div></div>#}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-
-                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th width="40%">类型</th>
+                                    <th width="30%">平均</th>
+                                    <th width="30%">每周增长</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>文件数量</td>
+                                    <td>124,25</td>
+                                    <td>
+    {#                                                <div class="sparkline line2010 dx-visibility-change-handler"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-sparkline" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden;"><g class="dxc-labels" visibility="hidden"></g><g class="dxsl-series"><g class="dxc-series"><g class="dxc-elements" stroke="#f7aa47" stroke-width="2"><path stroke-width="2" d="M 5 19 L 32 24 L 60 17 L 87 13 L 115 9 L 142 23 L 170 23 L 197 19 L 225 20 L 252 14 L 280 12 L 307 6"></path></g><g fill="#ffffff" stroke="#ffffff" stroke-width="2" r="3" visibility="hidden" class="dxc-markers" opacity="1"><circle cx="0" cy="0" r="3" fill="#ffffff" stroke="#666666" stroke-width="2" visibility="visible" transform="translate(5,19)"></circle><circle cx="0" cy="0" r="3" fill="#ffffff" stroke="#4fcdfc" stroke-width="2" visibility="visible" transform="translate(32,24)"></circle><circle cx="0" cy="0" r="3" fill="#ffffff" stroke="#d5080f" stroke-width="2" visibility="visible" transform="translate(307,6)"></circle></g></g></g></svg><div style="position: relative"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-tooltip" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden; left: 0px; top: -30px; position: absolute;"><g class="dxsl-tooltip-group" style="z-index: 1;"></g><g class="dxsl-tooltip-tracker-group"><rect x="0" y="0" width="312" height="30" rx="0" ry="0" fill="grey" opacity="0"></rect></g></svg></div></div>#}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>增长率</td>
+                                    <td>37,5%</td>
+                                    <td>
+    {#                                                <div class="sparkline spline2010 dx-visibility-change-handler"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-sparkline" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden;"><g class="dxc-labels" visibility="hidden"></g><g class="dxsl-series"><g class="dxc-series"><g class="dxc-elements" stroke="#68b828" stroke-width="3"><path stroke-width="3" d="M 5 23 C 5 23 18.5 24 32 24 C 46 24 50.666666666666664 23.50909090909091 60 23 C 69 22.50909090909091 78 21.818181818181817 87 21 C 96.33333333333333 20.151515151515152 105.66666666666667 18.848484848484848 115 18 C 124 17.181818181818183 128.5 16 142 16 C 156 16 156 18 170 18 C 183.5 18 188 17.818181818181817 197 17 C 206.33333333333334 16.151515151515152 215.66666666666666 14.357575757575757 225 13 C 234 11.69090909090909 243 9.981818181818182 252 9 C 261.3333333333333 7.9818181818181815 270.6666666666667 7.509090909090909 280 7 C 289 6.509090909090909 307 6 307 6"></path></g><g fill="#ffffff" stroke="#ffffff" stroke-width="2" r="3" visibility="hidden" class="dxc-markers" opacity="1"><circle cx="0" cy="0" r="3" fill="#ffffff" stroke="#00b19d" stroke-width="2" visibility="visible" transform="translate(32,24)"></circle><circle cx="0" cy="0" r="3" fill="#ffffff" stroke="#7c38bc" stroke-width="2" visibility="visible" transform="translate(307,6)"></circle></g></g></g></svg><div style="position: relative"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-tooltip" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden; left: 0px; top: -30px; position: absolute;"><g class="dxsl-tooltip-group" style="z-index: 1;"></g><g class="dxsl-tooltip-tracker-group"><rect x="0" y="0" width="312" height="30" rx="0" ry="0" fill="grey" opacity="0"></rect></g></svg></div></div>#}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>数据引用</td>
+                                    <td>107,221</td>
+                                    <td>
+    {#                                                <div class="sparkline stepline2010 dx-visibility-change-handler"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-sparkline" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden;"><g class="dxc-labels" visibility="hidden"></g><g class="dxsl-series"><g class="dxc-series"><g class="dxc-elements" stroke="#7c38bc" stroke-width="2"><path stroke-width="2" d="M 5 24 L 32 24 L 32 17 L 60 17 L 60 14 L 87 14 L 87 12 L 115 12 L 115 6 L 142 6 L 142 12 L 170 12 L 170 14 L 197 14 L 197 10 L 225 10 L 225 9 L 252 9 L 252 16 L 280 16 L 280 14 L 307 14 L 307 15"></path></g><g fill="#333" stroke="#333" stroke-width="2" r="4" visibility="hidden" class="dxc-markers" opacity="1"><path fill="#333" stroke="#ccc" stroke-width="2" r="4" visibility="visible" d="M -4 -4 L 4 -4 L 4 4 L -4 4 L -4 -4 Z" transform="translate(5,24)"></path><path fill="#333" stroke="#ccc" stroke-width="2" r="4" visibility="visible" d="M -4 -4 L 4 -4 L 4 4 L -4 4 L -4 -4 Z" transform="translate(307,15)"></path></g></g></g></svg><div style="position: relative"><svg width="312" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" stroke="none" stroke-width="0" fill="none" class="dxsl dxsl-tooltip" direction="ltr" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); display: block; overflow: hidden; left: 0px; top: -30px; position: absolute;"><g class="dxsl-tooltip-group" style="z-index: 1;"></g><g class="dxsl-tooltip-tracker-group"><rect x="0" y="0" width="312" height="30" rx="0" ry="0" fill="grey" opacity="0"></rect></g></svg></div></div>#}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
 
                     </div>
 
-				</div>
+                </div>
+
             </div>
 
-            <div class="col-sm-8">
+                <div class="col-sm-8">
 
+                    <div class="panel panel-default ">
 
-                <div class="panel panel-default ">
+                        <strong class="panel-title"><i class="fa-folder-open-o"></i>
+                            {% for breadcrumb in breadcrumbs %}
+                                <a href="{{ breadcrumb.0 }}"><strong class="text-info">{{ breadcrumb.1 }} /</strong></a>
+                            {% endfor %}
+                        </strong>
 
+                        <table class="table table-model-2 table-hover">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>权限</th>
+                                    <th>用户</th>
+                                    <th>大小</th>
+                                    <th>更新时间</th>
+                                    <th>下载</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
+                                {% if breadcrumbs|length > 2 %}
 
-{#                    <strong>Table Model 2</strong>#}
-                    <strong class="panel-title"><i class="fa-folder-open-o"></i>
-                        {% for breadcrumb in breadcrumbs %}
-                            <a href="{{ breadcrumb.0 }}"><strong class="text-info">{{ breadcrumb.1 }} /</strong></a>
-                        {% endfor %}
-                    </strong>
+                                <tr>
+                                    <td>
+                                        <a href="{{ last_breadcrumbs.0}}" >
+                                        <i class="fa-folder-open-o"></i>  <strong class="text-secondary">. .</strong>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <strong class="text-secondary">--</strong>
+                                    </td>
+                                    <td><span>--</span></td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
 
-                    <table class="table table-model-2 table-hover">
-                        <thead>
-                            <tr>
-                                <th>名称</th>
-                                <th>权限</th>
-                                <th>用户</th>
-                                <th>大小</th>
-                                <th>更新时间</th>
-                                <th>下载</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                                </tr>
+                                {% endif %}
 
-                            {% if breadcrumbs|length > 2 %}
+                                {% if trees.status %}
 
-                            <tr>
+                                    {% if trees.data.content|length == 0 %}
+                                        <tr>
+                                            <td>
+                                                <i class="fa-folder-open-o"></i>  <strong class="text-secondary">文件夹为空</strong>
+                                            </td>
+                                            <td>
+                                                <strong class="text-secondary">--</strong>
+                                            </td>
+                                            <td>
+                                                <span>--</span>
+                                            </td>
+                                            <td>--</td>
+                                            <td>--</td>
+                                            <td>--</td>
 
-                                <td>
-                                    <a href="{{ last_breadcrumbs.0}}" >
-                                    <i class="fa-folder-open-o"></i>  <strong class="text-secondary">. .</strong>
-                                    </a>
-                                </td>
+                                        </tr>
+                                    {% else %}
+                                        {% for tree in trees.data.content %}
 
-                                <td>
-                                    <strong class="text-secondary">--</strong>
-                                </td>
-                                <td>
-                                    <span>--</span>
-                                </td>
-                                <td>--</td>
-                                <td>--</td>
-                                <td>--</td>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="cbr">&nbsp;  &nbsp; &nbsp;
+                                                    <a href="{{ next_breadcrumbs.0}}/{{ tree.name }}" >
+                                                        {%  if tree.data.type == 'directory' %}
+                                                            <a href="{{ next_breadcrumbs.0}}/{{ tree.data.name }}?type=directory"  >
+                                                            <i class="fa-folder-open-o"></i> <span class="text-info"> {{ tree.data.name }}</span>
 
-                            </tr>
-                            {% endif %}
+                                                        {% else %}
+                                                            <a href="{{ next_breadcrumbs.0}}/{{ tree.data.name }}?type=file" class="text-info" >
+                                                            <i class="fa-file-text"></i> <span class="text-info"> {{ tree.data.name }}</span>
+                                                            </a>
+                                                        {% endif %}
 
-                            {% if trees.status %}
+                                                    </a>
+                                                </td>
 
-                                {% if trees.data.content|length == 0 %}
+                                                <td class="text-secondary">
+                                                    drwxr-xr-x
+                                                </td>
+                                                <td>
+                                                    <span>princetechs5</span>
+                                                </td>
+                                                <td>--</td>
+                                                <td>{{ tree.data.last_modified }}</td>
+                                                <td>
+                                                 <a href="" onclick="return false" name='{{ project.name }}' class="btn btn-info btn-sm btn-icon icon-left json-btn">下载</a>
+                                                </td>
+
+                                            </tr>
+
+                                        {% endfor %}
+
+                                    {% endif %}
+
+                                {% else %}
+
                                     <tr>
+
                                         <td>
-                                            <i class="fa-folder-open-o"></i>  <strong class="text-secondary">文件夹为空</strong>
+
+                                            <strong class="text-danger">文件夹不存在</strong>
+
                                         </td>
+
                                         <td>
                                             <strong class="text-secondary">--</strong>
                                         </td>
@@ -435,86 +488,22 @@
                                         <td>--</td>
 
                                     </tr>
-                                {% else %}
-                                    {% for tree in trees.data.content %}
-
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" class="cbr">&nbsp;  &nbsp; &nbsp;
-                                                <a href="{{ next_breadcrumbs.0}}/{{ tree.name }}" >
-                                                    {%  if tree.data.type == 'directory' %}
-                                                        <a href="{{ next_breadcrumbs.0}}/{{ tree.data.name }}?type=directory"  >
-                                                        <i class="fa-folder-open-o"></i> <span class="text-info"> {{ tree.data.name }}</span>
-
-                                                    {% else %}
-                                                        <a href="{{ next_breadcrumbs.0}}/{{ tree.data.name }}?type=file" class="text-info" >
-                                                        <i class="fa-file-text"></i> <span class="text-info"> {{ tree.data.name }}</span>
-                                                        </a>
-                                                    {% endif %}
-
-                                                </a>
-                                            </td>
-
-                                            <td class="text-secondary">
-                                                drwxr-xr-x
-                                            </td>
-                                            <td>
-                                                <span>princetechs5</span>
-                                            </td>
-                                            <td>--</td>
-                                            <td>{{ tree.data.last_modified }}</td>
-                                            <td>
-                                             <a href="" onclick="return false" name='{{ project.name }}' class="btn btn-info btn-sm btn-icon icon-left json-btn">下载</a>
-                                            </td>
-
-                                        </tr>
-
-                                    {% endfor %}
 
                                 {% endif %}
 
-                            {% else %}
+                            </tbody>
+                        </table>
+                    </div>
 
-                                <tr>
-
-                                    <td>
-
-                                        <strong class="text-danger">文件夹不存在</strong>
-
-                                    </td>
-
-                                    <td>
-                                        <strong class="text-secondary">--</strong>
-                                    </td>
-                                    <td>
-                                        <span>--</span>
-                                    </td>
-                                    <td>--</td>
-                                    <td>--</td>
-                                    <td>--</td>
-
-                                </tr>
-
-                            {% endif %}
-
-
-
-                        </tbody>
-                    </table>
                 </div>
 
             </div>
-        </div>
-
-
-			</div>
-
 
 			<!-- Main Footer -->
 			<!-- Choose between footer styles: "footer-type-1" or "footer-type-2" -->
 			<!-- Add class "sticky" to  always stick the footer to the end of page (if page contents is small) -->
 			<!-- Or class "fixed" to  always fix the footer to the end of page -->
-			<footer class="main-footer sticky footer-type-1">
+            <footer class="main-footer sticky footer-type-1">
 
 				<div class="footer-inner">
 

@@ -61,6 +61,20 @@ jQuery(document).ready(function($)
                                     var th = $("<tr></tr>");
                                     var tr = $("<tr></tr>");
                                     var _task = task[i];
+
+                                    console.log(_task);
+                                    console.log(_task.status);
+                                    console.log(_task.args);
+                                    console.log('<td>'+
+                                            '<a class="text-info" href="/dashboard/task/'+ project +'/'+
+                                            _task.task_id + '"' + 'target="_blank">' + _task.task_id + '</a>'+
+                                        '</td>'+
+                                        '<td>'+ _task.args + '</td>'+
+                                        '<td>'+ '<span class="label label-success">Success</span>' +'</td>'+
+                                        '<td>'+_task.callback+'</td>'+
+                                        '<td>'+ _task.retry_times +'</td>'+
+                                        '<td>'+ _task.spend_time +'</td>'+'<td>'+_task.update_time+'</td>' );
+
                                     if (_task.status == 4){
                                         var td = $(
                                         '<td>'+
@@ -85,6 +99,31 @@ jQuery(document).ready(function($)
                                         '<td>'+ _task.retry_times +'</td>'+
                                         '<td>'+ _task.spend_time +'</td>'+'<td>'+_task.update_time+'</td>');
                                     }
+                                    else if(_task.status == 0){
+                                        var td = $(
+                                        '<td>'+
+                                            '<a class="text-info" href="/dashboard/task/'+ project +'/'+
+                                            _task.task_id + '"' + 'target="_blank">' + _task.task_id + '</a>'+
+                                        '</td>'+
+                                        '<td>'+ _task.args + '</td>'+
+                                        '<td>'+ '<span class="label label-info">'+ 新增 +'</span>' +'</td>'+
+                                        '<td>'+_task.callback+'</td>'+
+                                        '<td>'+ _task.retry_times +'</td>'+
+                                        '<td>'+ _task.spend_time +'</td>'+'<td>'+_task.update_time+'</td>');
+                                    }
+                                    else {
+                                        var td = $(
+                                        '<td>'+
+                                            '<a class="text-info" href="/dashboard/task/'+ project +'/'+
+                                            _task.task_id + '"' + 'target="_blank">' + _task.task_id + '</a>'+
+                                        '</td>'+
+                                        '<td>'+ _task.args + '</td>'+
+                                        '<td>'+ '<span class="label label-muted">'+ _task.status +'</span>' +'</td>'+
+                                        '<td>'+_task.callback+'</td>'+
+                                        '<td>'+ _task.retry_times +'</td>'+
+                                        '<td>'+ _task.spend_time +'</td>'+'<td>'+_task.update_time+'</td>');
+                                    }
+
 
                                     td.appendTo(tr);
                                     tr.appendTo(tbody);

@@ -20,27 +20,29 @@ class Storage(object):
         """
         self.project_name = project_name.lower()
 
-    def save_to_single_file(self, content, output_file):
+    def save_to_single_file(self, content, output_file, type="wb"):
         """
         Save content to single file
         :param content:
+        :param type: "wb", "a"
         :param output_path:
         :return:
         """
         local_path = settings.LOCAL_DATAFILE_DIRS
         output_path = os.path.join(local_path, self.project_name, output_file)
 
-        with open(output_path, 'a') as f:
+        with open(output_path, type) as f:
             f.write(content)
 
         return {
             "status": True
         }
 
-    def save_to_time_file(self, content, output_file, formator='YYYY-MM-DD-HH'):
+    def save_to_time_file(self, content, output_file, type="wb", formator='YYYY-MM-DD-HH'):
         """
         Save content to time formator file
         :param content: data
+        :param type: "wb", "a"
         :param output_path: file_path
         :param formator: 'YYYY-MM-DD-HH-mm-ss',
                          'YYYY-MM-DD-HH-mm',
@@ -59,7 +61,7 @@ class Storage(object):
 
         output_path = os.path.join(local_path, self.project_name, output_file)
 
-        with open(output_path.format(arrow.now().replace(hours=8).format(formator)), 'a') as f:
+        with open(output_path.format(arrow.now().replace(hours=8).format(formator)), type) as f:
             f.write(content)
 
         return {

@@ -16,6 +16,7 @@ Just UTC-awareness right now
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
+import arrow
 from datetime import tzinfo, timedelta, datetime
 
 # constant for zero offset
@@ -35,18 +36,18 @@ class tzUTC(tzinfo):
 UTC = tzUTC()
 
 
-def utc_aware(unaware):
-    """decorator for adding UTC tzinfo to datetime's utcfoo methods"""
+# def utc_aware(unaware):
+#     """decorator for adding UTC tzinfo to datetime's utcfoo methods"""
+#
+#     def utc_method(*args, **kwargs):
+#         dt = unaware(*args, **kwargs)
+#         return dt.replace(tzinfo=UTC)
+#
+#     return utc_method
 
-    def utc_method(*args, **kwargs):
-        dt = unaware(*args, **kwargs)
-        return dt.replace(tzinfo=UTC)
 
-    return utc_method
-
-
-utcfromtimestamp = utc_aware(datetime.utcfromtimestamp)
-utcnow = utc_aware(datetime.utcnow)
+# utcfromtimestamp = utc_aware(datetime.utcfromtimestamp)
+# utcnow = utc_aware(datetime.utcnow)
 
 
 def isoformat(dt):
@@ -55,3 +56,50 @@ def isoformat(dt):
     Like .isoformat(), but uses Z for UTC instead of +00:00
     """
     return dt.isoformat().replace('+00:00', 'Z')
+
+
+# tz_utc_8 = timezone(timedelta(hours=8))
+
+
+
+def utc_aware(unaware):
+    """decorator for adding UTC tzinfo to datetime's utcfoo methods"""
+
+    def utc_method(*args, **kwargs):
+        dt = unaware(*args, **kwargs)
+        return dt
+
+    return utc_method
+
+def local_aware(unaware):
+    """decorator for adding UTC tzinfo to datetime's utcfoo methods"""
+
+    def utc_method(*args, **kwargs):
+        dt = unaware(*args, **kwargs)
+        return dt
+
+    return utc_method
+
+
+def localfromtimestamp(timestamp, timezone=8):
+    """
+    Get datetime string from timestamp
+    :param dt:
+    :return:
+    """
+    # return arrow.now().format('YYYY-MM-DD HH:mm:ss')
+    return arrow.get(float(timestamp)).replace(hours=timezone).format('YYYY-MM-DD HH:mm:ss')
+
+
+def utcfromtimestamp(timestamp):
+    """
+    Get datetime string from timestamp
+    :param dt:
+    :return:
+    """
+    # return arrow.now().format('YYYY-MM-DD HH:mm:ss')
+    return arrow.get(float(timestamp)).format('YYYY-MM-DD HH:mm:ss')
+
+
+#utcfromtimestamp = utc_aware(_utcfromtimestamp)
+#localfromtimestamp = local_aware(_localfromtimestamp)

@@ -25,6 +25,8 @@ storage.save_to_single_file(content, filename)
 storage.save_to_time_file(content, filename)
 """
 
+count = 0
+
 
 class Spider(object):
     """
@@ -39,9 +41,7 @@ class Spider(object):
         self.channel = Channel(channel)
         self.storage = Storage(PROJECT_NAME)
 
-
-    @staticmethod
-    def generate_interval_data(point, keys):
+    def generate_interval_data(self, point, keys_map):
         """
         Generate time interval data
         """
@@ -49,43 +49,105 @@ class Spider(object):
         start = time[0]
         _time_num = point[1]
 
-        data_formator = "{0},"
-        for i, key in enumerate(keys):
-            index = i+1
-            data_formator += "{%s}," %(index, )
+        global count
 
-        data_formator = data_formator[:-1] + "\n"
-        exec_formator = "_data = data_formator.format(arrow.get(start+i*_interval)\
-                         .format('YYYY-MM-DD HH:mm:ss'),%s)" %("random.randint(0,1),"* len(keys))
+        count += _time_num
+
         data = ""
-        if _time_num==0:
+        if _time_num == 0:
             return data
         else:
-            _time_range = time[1]-time[0]
-            _interval =  float(_time_range)/_time_num
+            data_formator = "{0},"
+            exec_formator = "_data = data_formator.format(arrow.get(start+i*_interval)\
+                         .format('YYYY-MM-DD HH:mm:ss'),"
+
+            for i, key in enumerate(keys_map):
+                index = i + 1
+                data_formator += "{%s}," % (index,)
+                if key[1]:
+                    exec_formator += "%s" % ("keys_map[%s][1].pop(0).encode('utf-8')," % (i))
+                else:
+                    exec_formator += "%s" % ("random.randint(0,1),")
+
+            data_formator = data_formator[:-1] + "\n"
+            exec_formator = exec_formator[:-1] + ")"
+
+            _time_range = time[1] - time[0]
+            _interval = float(_time_range) / _time_num
+            self.channel.log("Generate: %s %s" % (_time_num, count))
+            self.channel.log("Keys_map: {0}, {1}".format(len(keys_map[0][1]), "LOG"))
             for i in xrange(int(_time_num)):
-                exec(exec_formator)
+                exec (exec_formator)
                 data += _data
 
         return data
 
-    def generate_data(self, time_point, dimension):
+    def generate_map_dimension(self, num, map):
+        """
+        Generate map dismension
+        """
+        _map_value = []
+        _map = eval(map.get("dimension_curves").get('cur_data'))  # str ==> list
+
+        self.channel.log(str(map["dimension_curves"]))
+
+        _map_num = [i["value"] for i in _map]
+        if sum(_map_num) == 0:
+            return _map_value
+        _map_xargs = float(num) / sum(_map_num)
+        _map_relative_tuple = [(i["name"].decode("utf-8"), i["value"] * _map_xargs) for i in _map]
+
+        for i in _map_relative_tuple:
+            for j in xrange(int(round(i[1]))):
+                _map_value.append(i[0])
+
+        for i in _map_relative_tuple:
+            for j in xrange(int(round(i[1]))):
+                _map_value.append(i[0])
+
+        # self.channel.log(str(len(_map_value)))
+
+        return _map_value
+
+    def generate_other_dimension(self, num, dimension):
+        """
+        Generate other dismension
+        """
+        keys_map = []
+        for _dimension_key, _dimension_value in dimension.iteritems():
+
+            # Filter time dimension
+            if _dimension_key == "time": continue
+
+            if _dimension_value.get("dimension_curves", {}).get("cur_type", None) == "map":
+                map_value = self.generate_map_dimension(num, _dimension_value)
+                keys_map.append((_dimension_key, map_value))
+            else:
+                keys_map.append((_dimension_key, None))
+
+        return keys_map
+
+    def generate_data(self, time_point, num, dimension):
         """
         Generate data
         """
-        keys = []
-        data = "time,temp,wet,humi\n"
+        keys_map = self.generate_other_dimension(num, dimension)
 
-        for key in dimension.keys():
-            if key != "time": keys.append(key)
+        # self.channel.log(keys_map)
+
+        data = "time,"
+        for i in keys_map:
+            data = data + i[0] + ","
+        data = data[:-1] + "\n"
+
+        data = data.encode("utf-8")
 
         for i, point in enumerate(time_point):
-            self.channel.prograss((i+1)*100/len(time_point))
-            _part_data = self.generate_interval_data(point, keys)
+            self.channel.prograss((i + 1) * 100 / len(time_point))
+            _part_data = self.generate_interval_data(point, keys_map)
             data += _part_data
 
         return data
-
 
     def generate_time_dimension(self, case_name, num, start_time, end_time, dimension):
         """
@@ -96,15 +158,15 @@ class Spider(object):
         start = arrow.get(start_time).float_timestamp
         time_range = end - start
 
-        _time_num = dimension["time"]["dimension_curves"]["curves_dot_num"]
-        _time_tuple = dimension["time"]["dimension_curves"]["curves_data"]
+        _time_num = dimension["time"]["dimension_curves"]["cur_dot_num"]
+        _time_tuple = dimension["time"]["dimension_curves"]["cur_data"]
         _time_tuple = [float(i[1]) for i in eval(_time_tuple)]
         _xargs = float(case_num) / sum(_time_tuple)
-        _inteval = float(time_range)/_time_num
+        _inteval = float(time_range) / _time_num
 
-        time_range = [(i*_inteval + start, (i+1)*_inteval + start) for i in xrange(_time_num) ]
-        datetime_range = [(arrow.get(i[0]).format('YYYY-MM-DD HH:mm:ss'), arrow.get(i[1]).\
-                                           format('YYYY-MM-DD HH:mm:ss')) for i in time_range ]
+        time_range = [(i * _inteval + start, (i + 1) * _inteval + start) for i in xrange(_time_num)]
+        datetime_range = [(arrow.get(i[0]).format('YYYY-MM-DD HH:mm:ss'), arrow.get(i[1]). \
+                           format('YYYY-MM-DD HH:mm:ss')) for i in time_range]
         time_num = [round(i * _xargs) for i in _time_tuple]
 
         time_point = []
@@ -124,68 +186,55 @@ class Spider(object):
         Run Spider
         :return:
         """
-
-        kw = {
+        _kw = {
             "data_num": 100,
             "case_dimension": [
                 {
                     "dimension_name": "\\u65f6\\u95f4",
                     "dimension_curves": {
-                        "curves_name": "linear",
-                        "curves_dot_num": 10,
-                        "curves_data": "[[0,40],[20,67],[40,62],[60,31],[80,10],[100,25],[120,57],[140,69],[160,47],[180,16]]",
-                        "curves_yrange": "0,200",
-                        "curves_xrange": "0,100"
+                        "cur_name": "linear",
+                        "cur_dot_num": 10,
+                        "cur_data": "[[0,40],[20,67],[40,62],[60,31],[80,10],[100,25],[120,57],[140,69],[160,47],[180,16]]",
+                        "cur_yrange": "0,200",
+                        "cur_xrange": "0,100"
                     },
                     "dimension_field": "time"
                 },
                 {
                     "dimension_name": "\\u6e29\\u5ea6",
                     "dimension_curves": {
-                        "curves_name": "linear",
-                        "curves_dot_num": 10,
-                        "curves_data": "[[0,40],[20,67],[40,62],[60,31],[80,10],[100,25],[120,57],[140,69],[160,47],[180,16]]",
-                        "curves_yrange": "0,200",
-                        "curves_xrange": "0,100"
+                        "cur_name": "linear",
+                        "cur_dot_num": 10,
+                        "cur_data": "[[0,40],[20,67],[40,62],[60,31],[80,10],[100,25],[120,57],[140,69],[160,47],[180,16]]",
+                        "cur_yrange": "0,200",
+                        "cur_xrange": "0,100"
                     },
                     "dimension_field": "temp"
                 },
                 {
                     "dimension_name": "\\u6e7f\\u5ea6",
                     "dimension_curves": {
-                        "curves_dot_num": 10,
-                        "curves_data": "[[0,40],[20,67],[40,62],[60,31],[80,10],[100,25],[120,57],[140,69],[160,47],[180,16]]",
-                        "curves_start_date": "",
-                        "curves_end_date": "",
-                        "curves_xrange": "0,100",
-                        "curves_name": "linear",
-                        "curves_yrange": "0,200"
+                        "cur_dot_num": 10,
+                        "cur_data": "[[0,40],[20,67],[40,62],[60,31],[80,10],[100,25],[120,57],[140,69],[160,47],[180,16]]",
+                        "cur_start_date": "",
+                        "cur_end_date": "",
+                        "cur_xrange": "0,100",
+                        "cur_name": "linear",
+                        "cur_yrange": "0,200"
                     },
-                    "dimension_field": "wet"
-                },
-                {
-                    "dimension_name": "\\u6e7f\\u5ea6",
-                    "dimension_curves": {
-                        "curves_dot_num": 10,
-                        "curves_data": "[[0,40],[20,67],[40,62],[60,31],[80,10],[100,25],[120,57],[140,69],[160,47],[180,16]]",
-                        "curves_start_date": "",
-                        "curves_end_date": "",
-                        "curves_xrange": "0,100",
-                        "curves_name": "linear",
-                        "curves_yrange": "0,200"
-                    },
-                    "dimension_field": "humi"
+                    "dimension_field": ""
                 }
             ],
-            "start_date": "2017-06-22 00:00:00",
-            "end_date": "2017-06-23 00:00:00",
+
+            "start_time": "2017-07-05 11:06:24",
+            "end_time": "2017-07-06 11:06:27",
             "case_name": "\\u5929\\u6c14\\u6848\\u4f8b"
         }
 
         case_name = kw.get("case_name")
         num = kw.get("data_num")
-        start_time = kw.get("start_date")
-        end_time = kw.get("end_date")
+        start_time = kw.get("start_time")
+        end_time = kw.get("end_time")
         _case_dimension = kw.get("case_dimension")
 
         dimension = {}
@@ -193,7 +242,7 @@ class Spider(object):
             dimension[_dimension["dimension_field"]] = _dimension
 
         time_point = self.generate_time_dimension(case_name, num, start_time, end_time, dimension)
-        data = self.generate_data(time_point, dimension)
+        data = self.generate_data(time_point, num, dimension)
 
         self.channel.log(data)
         status = self.storage.save_to_time_file(data, 'data.csv')

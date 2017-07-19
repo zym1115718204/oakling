@@ -2,6 +2,9 @@
 # Contents: requirements packages
 # Created on 2017.5.27
 
+
+# Main Applications
+
 django
 click
 faker
@@ -18,3 +21,6 @@ requests
 ipython==5.4.1
 snakebite
 smart_open
+
+# Web Deploy
+gunicorn

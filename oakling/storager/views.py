@@ -11,8 +11,8 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 
 from libs.decorator import render_json
-from libs.tree.tree import TreeHandler
-from libs.tree.tree import ContentsHandler
+from storager.tree.tree import TreeHandler
+from storager.tree.tree import ContentsHandler
 from storager.handler import StorageHandler
 from collector.handler import CollectHandler
 
@@ -38,6 +38,61 @@ def data(request):
     return render_to_response("data.html", {"projects": projects, "datasystems": datasystems})
 
 
+# @csrf_exempt
+# @render_json
+# def local(request, name):
+#     """
+#     Data local-file index page
+#     :param request:
+#     :return:
+#     """
+#     path = name
+#     name = name.split("/")[0]
+#     tree_handler = TreeHandler("LOCAL")
+#
+#     if name is not None:
+#
+#         # handler = CollectHandler()
+#         # projects = handler.query_projects_status_by_redis(name=name)
+#
+#         localpath = path.strip('/')
+#         page_title, breadcrumbs = tree_handler.get_tree(localpath)
+#
+#         contents_manager = ContentsHandler("LOCAL")
+#         result = contents_manager.get(path, request)
+#
+#         storage_handler = StorageHandler()
+#         datasystems = storage_handler.query_data_systems_status()
+#
+#         if datasystems["status"] is True:
+#
+#             projects = datasystems.get("datasystems", {}).get("LOCAL", {}).get("projects",[])
+#
+#             if projects:
+#                 project = {}
+#                 for i, _project in enumerate(projects):
+#                     if _project["name"] == name:
+#                         project = _project
+#
+#                 content_models = result["data"]
+#                 return render_to_response(
+#                     "data-local.html", {
+#                         "project": project,
+#                         "trees": content_models,
+#                         "page_title": page_title,
+#                         "breadcrumbs": breadcrumbs,
+#                         "last_breadcrumbs": breadcrumbs[-2],
+#                         "next_breadcrumbs": breadcrumbs[-1],
+#                         "data_path": os.path.join(settings.LOCAL_DATAFILE_DIRS, name)
+#                     })
+#             else:
+#                 return page_404(request)
+#         else:
+#             return page_404(request)
+#     else:
+#         return page_404(request)
+
+
 @csrf_exempt
 @render_json
 def local(request, name):
@@ -52,8 +107,8 @@ def local(request, name):
 
     if name is not None:
 
-        handler = CollectHandler()
-        projects = handler.query_projects_status_by_redis(name=name)
+        # handler = CollectHandler()
+        # projects = handler.query_projects_status_by_redis(name=name)
 
         localpath = path.strip('/')
         page_title, breadcrumbs = tree_handler.get_tree(localpath)
@@ -61,17 +116,22 @@ def local(request, name):
         contents_manager = ContentsHandler("LOCAL")
         result = contents_manager.get(path, request)
 
-        if result["status"] is True and projects:
+        storage_handler = StorageHandler()
+        datasystems = storage_handler.query_data_systems_status_by_project(name, "LOCAL")
+
+        if datasystems["status"] is True:
+
+            project = datasystems.get("project", {})
             content_models = result["data"]
             return render_to_response(
                 "data-local.html", {
-                    "project": projects[0],
+                    "project": project,
                     "trees": content_models,
                     "page_title": page_title,
                     "breadcrumbs": breadcrumbs,
                     "last_breadcrumbs": breadcrumbs[-2],
                     "next_breadcrumbs": breadcrumbs[-1],
-                    "local_data_dir": os.path.join(settings.LOCAL_DATAFILE_DIRS, name)
+                    "data_path": os.path.join(settings.LOCAL_DATAFILE_DIRS, name)
                 })
         else:
             return page_404(request)
@@ -93,8 +153,8 @@ def hdfs(request, name):
 
     if name is not None:
 
-        handler = CollectHandler()
-        projects = handler.query_projects_status_by_redis(name=name)
+        # handler = CollectHandler()
+        # projects = handler.query_projects_status_by_redis(name=name)
 
         localpath = path.strip('/')
         page_title, breadcrumbs = tree_handler.get_tree(localpath)
@@ -102,17 +162,21 @@ def hdfs(request, name):
         contents_manager = ContentsHandler("HDFS")
         result = contents_manager.get(path, request)
 
-        if result["status"] is True and projects:
+        storage_handler = StorageHandler()
+        datasystems = storage_handler.query_data_systems_status_by_project(name, "HDFS")
+
+        if result["status"] is True:
+            project = datasystems.get("project", {})
             content_models = result["data"]
             return render_to_response(
                 "data-hdfs.html", {
-                    "project": projects[0],
+                    "project": project,
                     "trees": content_models,
                     "page_title": page_title,
                     "breadcrumbs": breadcrumbs,
                     "last_breadcrumbs": breadcrumbs[-2],
                     "next_breadcrumbs": breadcrumbs[-1],
-                    "local_data_dir": os.path.join(settings.LOCAL_DATAFILE_DIRS, name)
+                    "data_path": os.path.join(settings.HDFS_DATAFILE_DIRS, name)
                 })
         else:
             return page_404(request)

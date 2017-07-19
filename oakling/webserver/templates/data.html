@@ -420,13 +420,11 @@
                         <!--Xenon Progress Counter Widget-->
                         <div class="row">
 
-{#                            {{ datasystems.datasystems.LOCAL }}#}
-{##}
 {#                            测试本地文件系统数据集#}
 {#                            {% for k,v in datasystems.datasystems.LOCAL.items %}#}
 {#                                {{ k }}:{{ v }}#}
+{#                                </br>#}
 {#                            {% endfor %}#}
-
 
                             <div class="col-md-12">
 
@@ -476,7 +474,7 @@
                                                         <small>连接状态: {{ datasystems.datasystems.LOCAL.connected }} </small>
                                                         <small>本地存储配置: {{ datasystems.datasystems.LOCAL.config }} </small>
                                                         <small>本地实际路径: {{ datasystems.datasystems.LOCAL.config }} </small>
-                                                        <small>数据更新时间: {{ datasystems.datasystems.LOCAL.modification_time|default:"N/A" }} </small>
+                                                        <small>数据更新时间: {{ datasystems.datasystems.LOCAL.modification_time|default:"N/A" }}</small>
 
                                                     </p>
                                                 </blockquote>
@@ -486,11 +484,11 @@
                                                 <h5>基本信息:</h5>
                                                 <blockquote>
 
-                                                    <small>数据量: {{ datasystems.datasystems.LOCAL.length }} </small>
-                                                    <small>容量: {{ datasystems.datasystems.LOCAL.capacity }} </small>
-                                                    <small>已使用: {{ datasystems.datasystems.LOCAL.used }} </small>
-                                                    <small>未使用: {{ datasystems.datasystems.LOCAL.remaining }} </small>
-                                                    <small>包含任务数量: {{ datasystems.datasystems.LOCAL.projects|length }} </small>
+                                                    <small>数据量: {{ datasystems.datasystems.LOCAL.length|floatformat:3}}  GB </small>
+                                                    <small>容量: {{ datasystems.datasystems.LOCAL.capacity|floatformat:3 }}  GB </small>
+                                                    <small>已使用: {{ datasystems.datasystems.LOCAL.used|floatformat:3 }}  GB </small>
+                                                    <small>未使用: {{ datasystems.datasystems.LOCAL.remaining|floatformat:3 }}  GB </small>
+                                                    <small>包含任务数量: {{ datasystems.datasystems.LOCAL.projects|length }}  </small>
                                                 </blockquote>
                                             </div>
 
@@ -502,7 +500,7 @@
 
                             </div>
 
-                            {% for project in projects %}
+                            {% for project in datasystems.datasystems.LOCAL.projects %}
 
                             <a href="/dashboard/data/local/{{project.name}}">
                                 <div class="col-sm-3">
@@ -525,7 +523,7 @@
                                     {% elif project.index == 7 %}
                                     xe-progress-counter xe-progress-counter-red
                                     {% endif %}
-                                    " data-count=".num" data-from="0" data-to="12425" data-duration="2">
+                                    " data-count=".num" data-from="0" data-to="{{ project.fileCount }}" data-duration="2">
 
                                         <div class="xe-icon">
                                             <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ project.name }}</h3>
@@ -543,6 +541,14 @@
                                                 <span>文件数量</span>
                                                 <strong class="num">0</strong>
                                             </div>
+
+                                            <div class="xe-icon">
+                                                <i class="fa-pie-chart"></i>
+                                            </div>
+                                            <div class="xe-label xe-widget counter" data-count=".length" data-from="0" data-to="{{ project.length|floatformat:3|default:"N/A" }}" data-duration="2" data-suffix=" GB">
+                                                <span>文件大小</span>
+                                                <strong class="num length">N/A</strong>
+                                            </div>
                                         </div>
 
                                         <div class="xe-progress">
@@ -550,9 +556,8 @@
                                         </div>
 
                                         <div class="xe-lower">
-                                            <span>Update time</span>
                                             <span>更新时间</span>
-                                            <strong>{{ project.update_time }}</strong>
+                                            <strong>{{ project.modification_time }}</strong>
                                         </div>
 
                                     </div>
@@ -573,12 +578,10 @@
                         <!--Xenon Progress Counter Widget-->
                         <div class="row">
 
-{#                            测试HDFS文件系统数据集#}
 {#                            {% for k,v in datasystems.datasystems.HDFS.items %}#}
 {#                                 {{ k }}:{{ v }}#}
+{#                                 </br>#}
 {#                            {% endfor %}#}
-
-
 
                             <div class="col-md-12">
 
@@ -637,11 +640,11 @@
                                                 <h5>基本信息:</h5>
                                                 <blockquote>
 
-                                                    <small>数据量: {{ datasystems.datasystems.HDFS.length }} </small>
+                                                    <small>数据量: {{ datasystems.datasystems.HDFS.length|floatformat:3 }} GB </small>
 {#                                                    <small>存储空间占用: {{ datasystems.datasystems.HDFS.spaceConsumed }} </small>#}
-                                                    <small>容量: {{ datasystems.datasystems.HDFS.capacity }} </small>
-                                                    <small>已使用: {{ datasystems.datasystems.HDFS.used }} </small>
-                                                    <small>未使用: {{ datasystems.datasystems.HDFS.remaining }} </small>
+                                                    <small>容量: {{ datasystems.datasystems.HDFS.capacity|floatformat:3 }} GB</small>
+                                                    <small>已使用: {{ datasystems.datasystems.HDFS.used|floatformat:3 }} GB</small>
+                                                    <small>未使用: {{ datasystems.datasystems.HDFS.remaining|floatformat:3 }} GB</small>
                                                     <small>包含任务数量: {{ datasystems.datasystems.HDFS.projects|length }} </small>
                                                 </blockquote>
                                             </div>
@@ -668,7 +671,6 @@
                                 </div>
                             </div>
 
-
                             {% for project in datasystems.datasystems.HDFS.projects %}
 
                             <a href="/dashboard/data/hdfs/{{ project.name }}">
@@ -692,7 +694,7 @@
                                     {% elif project.index == 7 %}
                                     xe-progress-counter xe-progress-counter-red
                                     {% endif %}
-                                    " data-count=".num" data-from="0" data-to="12425" data-duration="2">
+                                    " data-count=".num" data-from="0" data-to="{{ project.fileCount }}" data-duration="2">
 
                                         <div class="xe-icon">
                                             <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ project.name }}</h3>
@@ -710,6 +712,13 @@
                                                 <span>文件数量</span>
                                                 <strong class="num">0</strong>
                                             </div>
+                                            <div class="xe-icon">
+                                                <i class="fa-pie-chart"></i>
+                                            </div>
+                                            <div class="xe-label xe-widget counter" data-count=".length" data-from="0" data-to="{{ project.length|floatformat:3 }}" data-duration="2" data-suffix=" GB">
+                                                <span>文件大小</span>
+                                                <strong class="num length">0 </strong>
+                                            </div>
                                         </div>
 
                                         <div class="xe-progress">
@@ -717,9 +726,8 @@
                                         </div>
 
                                         <div class="xe-lower">
-                                            <span>Update time</span>
                                             <span>更新时间</span>
-                                            <strong>{{ project.update_time }}</strong>
+                                            <strong>{{ project.modification_time }}</strong>
                                         </div>
 
                                     </div>
@@ -728,67 +736,6 @@
                             </a>
 
                             {% endfor %}
-
-{#                            {% for project in projects %}#}
-{##}
-{#                            <a href="/dashboard/data/hdfs/{{ project.name }}">#}
-{#                                <div class="col-sm-3">#}
-{##}
-{#                                    <div class="xe-widget#}
-{#                                    {% if project.index == 0 %}#}
-{#                                    xe-progress-counter#}
-{#                                    {% elif project.index == 1 %}#}
-{#                                    xe-progress-counter xe-progress-counter-pink#}
-{#                                    {% elif project.index == 2 %}#}
-{#                                    xe-progress-counter xe-progress-counter-info#}
-{#                                    {% elif project.index == 3 %}#}
-{#                                    xe-progress-counter xe-progress-counter-turquoise#}
-{#                                    {% elif project.index == 4 %}#}
-{#                                    xe-progress-counter xe-progress-counter-pink#}
-{#                                    {% elif project.index == 5 %}#}
-{#                                    xe-progress-counter xe-progress-counter-turquoise#}
-{#                                    {% elif project.index == 6 %}#}
-{#                                    xe-progress-counter xe-progress-counter-info#}
-{#                                    {% elif project.index == 7 %}#}
-{#                                    xe-progress-counter xe-progress-counter-red#}
-{#                                    {% endif %}#}
-{#                                    " data-count=".num" data-from="0" data-to="12425" data-duration="2">#}
-{##}
-{#                                        <div class="xe-icon">#}
-{#                                            <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ project.name }}</h3>#}
-{#                                        </div>#}
-{##}
-{#                                        <div class="xe-background">#}
-{#                                            <i class="linecons-file">{{ project.name }}</i>#}
-{#                                        </div>#}
-{##}
-{#                                        <div class="xe-upper">#}
-{#                                            <div class="xe-icon">#}
-{#                                                <i class="fa-file-text-o"></i>#}
-{#                                            </div>#}
-{#                                            <div class="xe-label">#}
-{#                                                <span>文件数量</span>#}
-{#                                                <strong class="num">0</strong>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{##}
-{#                                        <div class="xe-progress">#}
-{#                                            <span class="xe-progress-fill" data-fill-from="0" data-fill-to="56" data-fill-unit="%" data-fill-property="width" data-fill-duration="2" data-fill-easing="true"></span>#}
-{#                                        </div>#}
-{##}
-{#                                        <div class="xe-lower">#}
-{#                                            <span>Update time</span>#}
-{#                                            <span>更新时间</span>#}
-{#                                            <strong>{{ project.update_time }}</strong>#}
-{#                                        </div>#}
-{##}
-{#                                    </div>#}
-{##}
-{#                                </div>#}
-{#                            </a>#}
-{##}
-{#                            {% endfor %}#}
-
 
                         </div>
 

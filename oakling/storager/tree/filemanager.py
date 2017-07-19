@@ -136,8 +136,8 @@ class FileContentsManager(object):
         """Build the common base of a contents model"""
         os_path = self._get_os_path(path)
         info = os.stat(os_path)
-        last_modified = tz.utcfromtimestamp(info.st_mtime)
-        created = tz.utcfromtimestamp(info.st_ctime)
+        last_modified = tz.localfromtimestamp(info.st_mtime)
+        created = tz.localfromtimestamp(info.st_ctime)
         # Create the base model.
         model = {}
         model['name'] = path.rsplit('/', 1)[-1]
@@ -450,8 +450,8 @@ class HdfsFileContentsManager(object):
 
         print "452, info:", info
 
-        last_modified = tz.utcfromtimestamp(float(info["modification_time"])/1000)
-        created = tz.utcfromtimestamp(float(info["modification_time"])/1000)
+        last_modified = tz.localfromtimestamp(float(info["modification_time"])/1000)
+        created = tz.localfromtimestamp(float(info["modification_time"])/1000)
         # Create the base model.
         model = {}
         model['name'] = path.rsplit('/', 1)[-1]
